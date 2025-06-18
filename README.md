@@ -85,8 +85,4 @@ views/
 
 ## License
 
-This project is licensed under the ISC License.
-
----
-
-Author: Ismail sami Ibrahim
+This project is licensed under the MIT License.
