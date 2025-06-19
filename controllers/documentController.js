@@ -173,14 +173,28 @@ const searchDocuments = async (req, res) => {
   }
 
   try {
-    const documents = await Document.find({
-      content: { $regex: new RegExp(query, "i") },
-    });
+    const pipeline = [
+      {
+        $match: {
+          content: { $regex: new RegExp(query, "i") },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          originalName: 1,
+          content: 1,
+        },
+      },
+    ];
+
+    const documents = await Document.aggregate(pipeline, { allowDiskUse: true });
 
     const highlighted = documents.map((doc) => {
       const highlightedContent = doc.content.replace(
         new RegExp(`(${query})`, "gi"),
-        "**$1**" 
+        "**$1**"
       );
 
       return {
