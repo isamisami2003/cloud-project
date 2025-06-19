@@ -286,5 +286,13 @@ const getStats = async (req, res) => {
   }
 };
 
+const sort = async (req,res) => {
+  try {
+    const docs = await Document.find({}).sort({ title: 1 }); 
+    res.json(docs);
+  } catch (err) {
+    res.status(500).json({ message: 'wrong to get documents' });
+  }
+}
 
-module.exports = { uploadDocument, getAllDocuments, searchDocuments, classifyDocuments, getStats}
+module.exports = { uploadDocument, getAllDocuments, searchDocuments, classifyDocuments, getStats, sort}
