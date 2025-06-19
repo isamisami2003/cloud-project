@@ -288,7 +288,7 @@ const getStats = async (req, res) => {
 
 const sort = async (req,res) => {
   try {
-    const docs = await Document.find().sort({ title: 1 }); 
+    const docs = await Document.find().sort({ title: 1 }).allowDiskUse(true); 
     res.json(docs.map(doc => ({
       title: doc.title,
     })));
