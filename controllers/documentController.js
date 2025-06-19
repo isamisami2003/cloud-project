@@ -286,16 +286,20 @@ const getStats = async (req, res) => {
   }
 };
 
-const sort = async (req,res) => {
+const sort = async (req, res) => {
   try {
-    const docs = await Document.find().sort({ title: 1 }).allowDiskUse(true); 
+    const docs = await Document.aggregate([
+      { $sort: { title: 1 } },
+      { $project: { title: 1, _id: 0 } }
+    ], { allowDiskUse: true });
+
     res.json(docs.map(doc => ({
-      title: doc.title,
-    })));
+      title: doc.title})
+    ));
   } catch (err) {
+    console.error("Aggregation sort error:", err);
     res.status(500).json({ error: "Failed to fetch documents" });
-    console.log(err)
   }
-}
+};
 
 module.exports = { uploadDocument, getAllDocuments, searchDocuments, classifyDocuments, getStats, sort}
