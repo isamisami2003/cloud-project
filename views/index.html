@@ -120,7 +120,7 @@
     }
     
     async function showSortedDocuments() {
-      const res = await fetch(`${apiBase}/sort`);
+      const res = await fetch(`${apiBase}/`);
       const docs = await res.json();
       const container = document.getElementById("sortedDocuments");
       container.innerHTML = "";
