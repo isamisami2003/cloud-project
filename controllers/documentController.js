@@ -175,12 +175,12 @@ const searchDocuments = async (req, res) => {
   try {
     const documents = await Document.find({
       content: { $regex: new RegExp(query, "i") },
-    });
+    }).limit(2);
 
     const highlighted = documents.map((doc) => {
       const highlightedContent = doc.content.replace(
         new RegExp(`(${query})`, "gi"),
-        "**$1**" 
+        "**$1**"
       );
 
       return {
@@ -197,6 +197,7 @@ const searchDocuments = async (req, res) => {
     res.status(500).json({ error: "Search failed" });
   }
 };
+
 
 
 const classificationTree = {
