@@ -286,7 +286,7 @@ const getStats = async (req, res) => {
   }
 };
 
-const sort = async (req,res){
+const sort = async (req,res) => {
   try {
     const docs = await DocumentModel.find({}).sort({ title: 1 }); 
     res.json(docs);
