@@ -287,9 +287,11 @@ const getStats = async (req, res) => {
 };
 
 const sort = async (req,res) => {
-   try {
-    const docs = await Document.find().sort({ title: 1 });
-    res.json(docs);
+  try {
+    const docs = await Document.find().sort({ title: 1 }); 
+    res.json(docs.map(doc => ({
+      title: doc.title,
+    })));
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch documents" });
   }
