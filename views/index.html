@@ -74,39 +74,26 @@
       loadStats();
     }
 
-// searchDocuments function to search documents by content
-const searchDocuments = async (req, res) => {
-  const { query } = req.query;
+    async function searchDocuments() {
+    const query = document.getElementById("searchInput").value;
+    const res = await fetch(`${apiBase}/search?query=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    const container = document.getElementById("searchResults");
+    container.innerHTML = "";
 
-  if (!query || query.trim() === "") {
-    return res.status(400).json({ error: "Query is required" });
-  }
+    const highlight = (text, word) => {
+        const pattern = new RegExp(`(${word})`, "gi");
+        return text.replace(pattern, '<span style="background-color: yellow; font-weight: bold;">$1</span>');
+    };
 
-  try {
-    const documents = await Document.find({
-      content: { $regex: new RegExp(query, "i") },
-    }).limit(2);
-
-    const highlighted = documents.map((doc) => {
-      const highlightedContent = doc.content.replace(
-        new RegExp(`(${query})`, "gi"),
-        "**$1**"
-      );
-
-      return {
-        _id: doc._id,
-        title: doc.title,
-        originalName: doc.originalName,
-        content: highlightedContent,
-      };
+    data.forEach(doc => {
+        const div = document.createElement("div");
+        div.className = "border p-2 mb-2 bg-white";
+        const highlightedContent = highlight(doc.content, query);
+        div.innerHTML = `<strong>${doc.title}</strong><p>${highlightedContent}</p>`;
+        container.appendChild(div);
     });
-
-    res.json(highlighted);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Search failed" });
-  }
-};
+    };
     
     async function classifyDocuments() {
       await fetch(`${apiBase}/classify`, {
